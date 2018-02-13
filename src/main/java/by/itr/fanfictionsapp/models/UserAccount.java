@@ -1,6 +1,8 @@
 package by.itr.fanfictionsapp.models;
 
+import by.itr.fanfictionsapp.services.dto.RegisterRequestDTO;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class UserAccount {
 
     @Id
@@ -19,5 +22,11 @@ public class UserAccount {
     private String password;
 
     private String email;
+
+    public UserAccount(RegisterRequestDTO registerRequestDTO){
+        this.username = registerRequestDTO.getUsername();
+        this.email = registerRequestDTO.getEmail();
+        this.password = registerRequestDTO.getPassword();
+    }
 
 }
