@@ -23,10 +23,14 @@ public class UserAccount {
 
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
     public UserAccount(RegisterRequestDTO registerRequestDTO){
         this.username = registerRequestDTO.getUsername();
         this.email = registerRequestDTO.getEmail();
         this.password = registerRequestDTO.getPassword();
+        userRole = UserRole.ROLE_USER;
     }
 
 }

@@ -3,9 +3,11 @@ package by.itr.fanfictionsapp.security.models;
 import by.itr.fanfictionsapp.models.UserAccount;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -20,6 +22,8 @@ public class UserAccountDetails implements UserDetails {
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
+        this.authorities = new HashSet<>();
+        this.authorities.add(new SimpleGrantedAuthority(user.getUserRole().name()));
     }
 
     @Override

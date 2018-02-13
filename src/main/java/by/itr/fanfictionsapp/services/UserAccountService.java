@@ -1,6 +1,7 @@
 package by.itr.fanfictionsapp.services;
 
 import by.itr.fanfictionsapp.models.UserAccount;
+import by.itr.fanfictionsapp.models.UserRole;
 import by.itr.fanfictionsapp.repositories.UserAccountRepository;
 import by.itr.fanfictionsapp.security.exceptions.CredentialsNotUniqueException;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
@@ -26,12 +27,13 @@ public class UserAccountService {
     }
 
     public void createUserAccount(RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException{
-        if(authenticationService.isCredentialsUnique(registerRequestDTO).isCredentialsUnique())
+        if(!authenticationService.isCredentialsUnique(registerRequestDTO).isCredentialsUnique())
             throw new CredentialsNotUniqueException("Credentials not unique");
         UserAccount userAccount = new UserAccount();
         userAccount.setEmail(registerRequestDTO.getEmail());
         userAccount.setUsername(registerRequestDTO.getUsername());
         userAccount.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
+        userAccount.setUserRole(UserRole.ROLE_USER);
         userAccountRepository.save(userAccount);
     }
 
