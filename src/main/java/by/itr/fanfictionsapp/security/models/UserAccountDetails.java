@@ -2,6 +2,7 @@ package by.itr.fanfictionsapp.security.models;
 
 import by.itr.fanfictionsapp.models.UserAccount;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,12 +12,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@Setter
 public class UserAccountDetails implements UserDetails {
 
     private Long id;
     private String username;
     private String password;
     private Set<GrantedAuthority> authorities;
+    private boolean enabled;
 
     public UserAccountDetails(UserAccount user){
         this.id = user.getId();
@@ -24,6 +27,7 @@ public class UserAccountDetails implements UserDetails {
         this.password = user.getPassword();
         this.authorities = new HashSet<>();
         this.authorities.add(new SimpleGrantedAuthority(user.getUserRole().name()));
+        this.enabled = user.isEnabled();
     }
 
     @Override
@@ -58,6 +62,6 @@ public class UserAccountDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

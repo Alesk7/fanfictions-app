@@ -26,11 +26,14 @@ public class UserAccount {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    private boolean enabled;
+
     public UserAccount(RegisterRequestDTO registerRequestDTO){
         this.username = registerRequestDTO.getUsername();
         this.email = registerRequestDTO.getEmail();
         this.password = registerRequestDTO.getPassword();
         userRole = UserRole.ROLE_USER;
+        enabled = false;
     }
 
 }

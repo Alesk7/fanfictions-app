@@ -26,7 +26,7 @@ public class UserAccountService {
         return new AppUserDTO(user);
     }
 
-    public void createUserAccount(RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException{
+    public UserAccount createUserAccount(RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException {
         if(!authenticationService.isCredentialsUnique(registerRequestDTO).isCredentialsUnique())
             throw new CredentialsNotUniqueException("Credentials not unique");
         UserAccount userAccount = new UserAccount();
@@ -35,6 +35,7 @@ public class UserAccountService {
         userAccount.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
         userAccount.setUserRole(UserRole.ROLE_USER);
         userAccountRepository.save(userAccount);
+        return userAccount;
     }
 
 }

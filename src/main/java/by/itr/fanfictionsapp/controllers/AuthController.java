@@ -1,6 +1,8 @@
 package by.itr.fanfictionsapp.controllers;
 
+import by.itr.fanfictionsapp.models.UserAccount;
 import by.itr.fanfictionsapp.security.exceptions.CredentialsNotUniqueException;
+import by.itr.fanfictionsapp.security.exceptions.VerificationTokenException;
 import by.itr.fanfictionsapp.services.AuthenticationService;
 import by.itr.fanfictionsapp.services.UserAccountService;
 import by.itr.fanfictionsapp.services.dto.CredentialsUniqueDTO;
@@ -30,7 +32,14 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public void register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException{
-        userAccountService.createUserAccount(registerRequestDTO);
+        UserAccount userAccount = userAccountService.createUserAccount(registerRequestDTO);
+        authenticationService.sendConfirmationMail(userAccount);
+    }
+
+    @GetMapping("/register/confirm")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmRegistration(@RequestParam("token") String token) throws VerificationTokenException{
+        authenticationService.confirmUserAccount(token);
     }
 
     @PostMapping("/isCredentialsUnique")
