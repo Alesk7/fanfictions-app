@@ -4,6 +4,8 @@ import by.itr.fanfictionsapp.security.JWTAuthenticationFilter;
 import by.itr.fanfictionsapp.security.JWTAuthenticationProvider;
 import by.itr.fanfictionsapp.security.handlers.RestAccessDeniedHandler;
 import by.itr.fanfictionsapp.security.handlers.RestAuthenticationEntryPoint;
+import by.itr.fanfictionsapp.services.social.SimpleConnectionSignUp;
+import by.itr.fanfictionsapp.services.social.SimpleSignInAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
+import org.springframework.social.connect.web.ProviderSignInController;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,6 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthenticationProvider jwtAuthenticationProvider;
     private final UserDetailsService userAccountDao;
+    private final ConnectionFactoryLocator connectionFactoryLocator;
+    private final UsersConnectionRepository usersConnectionRepository;
+    private final SimpleConnectionSignUp facebookConnectionSignup;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -60,8 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) {
         web.ignoring()
-                .antMatchers(HttpMethod.POST, "/auth/**")
-                .antMatchers(HttpMethod.GET, "/auth/register/confirm");
+                .antMatchers(HttpMethod.POST, "/register/**", "/login/**")
+                .antMatchers("/signin/**", "/signup/**");
     }
 
     @Override
@@ -70,5 +79,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(jwtAuthenticationProvider)
                 .userDetailsService(userAccountDao)
                 .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public ProviderSignInController providerSignInController() {
+        ((InMemoryUsersConnectionRepository) usersConnectionRepository)
+                .setConnectionSignUp(facebookConnectionSignup);
+
+        return new ProviderSignInController(
+                connectionFactoryLocator,
+                usersConnectionRepository,
+                new SimpleSignInAdapter());
     }
 }
