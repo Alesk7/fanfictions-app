@@ -30,9 +30,13 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public void register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException{
-        UserAccount userAccount = userAccountService.createUserAccount(registerRequestDTO);
-        authenticationService.sendConfirmationMail(userAccount);
+    public CredentialsUniqueDTO register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException{
+        CredentialsUniqueDTO credentialsUniqueDTO = authenticationService.isCredentialsUnique(registerRequestDTO);
+        if(credentialsUniqueDTO.isCredentialsUnique()) {
+            UserAccount userAccount = userAccountService.createUserAccount(registerRequestDTO);
+            authenticationService.sendConfirmationMail(userAccount);
+        }
+        return credentialsUniqueDTO;
     }
 
     @GetMapping("/register/confirm")
