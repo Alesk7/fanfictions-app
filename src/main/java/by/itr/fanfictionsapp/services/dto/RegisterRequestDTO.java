@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class RegisterRequestDTO {
+public class RegisterRequestDTO extends UserAccountDTO {
 
     @Email
     @NotNull

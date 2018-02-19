@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final String AUTHENTICATION_HEADER = "Authorization";
+    private final String AUTHENTICATION_HEADER = "authorization";
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(request -> true);

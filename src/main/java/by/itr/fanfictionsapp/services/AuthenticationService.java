@@ -7,10 +7,9 @@ import by.itr.fanfictionsapp.repositories.VerificationTokenRepository;
 import by.itr.fanfictionsapp.security.JWTHelper;
 import by.itr.fanfictionsapp.security.exceptions.VerificationTokenException;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
-import by.itr.fanfictionsapp.services.dto.LoginRequestDTO;
 import by.itr.fanfictionsapp.services.dto.LoginResponseDTO;
-import by.itr.fanfictionsapp.services.dto.RegisterRequestDTO;
 import by.itr.fanfictionsapp.services.dto.CredentialsUniqueDTO;
+import by.itr.fanfictionsapp.services.dto.UserAccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -39,7 +38,7 @@ public class AuthenticationService {
     private final JavaMailSender mailSender;
     private final VerificationTokenRepository verificationTokenRepository;
 
-    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO){
+    public LoginResponseDTO login(UserAccountDTO loginRequestDTO){
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                 loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
         Authentication authResult = authenticationManager.authenticate(authRequest);
@@ -51,10 +50,10 @@ public class AuthenticationService {
         }
     }
 
-    public CredentialsUniqueDTO isCredentialsUnique(RegisterRequestDTO registerRequestDTO){
+    public CredentialsUniqueDTO isCredentialsUnique(UserAccountDTO userAccountDTO){
         CredentialsUniqueDTO credentialsUniqueDTO = new CredentialsUniqueDTO();
-        credentialsUniqueDTO.setEmailUnique(!emailExists(registerRequestDTO.getEmail()));
-        credentialsUniqueDTO.setUsernameUnique(!usernameExists(registerRequestDTO.getUsername()));
+        credentialsUniqueDTO.setEmailUnique(!emailExists(userAccountDTO.getEmail()));
+        credentialsUniqueDTO.setUsernameUnique(!usernameExists(userAccountDTO.getUsername()));
         credentialsUniqueDTO.setCredentialsUnique(credentialsUniqueDTO.isEmailUnique() && credentialsUniqueDTO.isUsernameUnique());
         return credentialsUniqueDTO;
     }
@@ -74,7 +73,7 @@ public class AuthenticationService {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(userAccount.getEmail());
         mail.setSubject("Registration confirmation");
-        mail.setText(applicationDomain + "auth/register/confirm?token=" + token);
+        mail.setText(applicationDomain + "api/register/confirm?token=" + token);
         mailSender.send(mail);
     }
 

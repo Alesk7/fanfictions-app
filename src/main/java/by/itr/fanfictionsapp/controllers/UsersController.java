@@ -1,13 +1,13 @@
 package by.itr.fanfictionsapp.controllers;
 
+import by.itr.fanfictionsapp.models.UserAccount;
+import by.itr.fanfictionsapp.services.AuthenticationService;
 import by.itr.fanfictionsapp.services.UserAccountService;
-import by.itr.fanfictionsapp.services.dto.AppUserDTO;
+import by.itr.fanfictionsapp.services.dto.CredentialsUniqueDTO;
+import by.itr.fanfictionsapp.services.dto.UserAccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -15,11 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsersController {
 
     private final UserAccountService userAccountService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public AppUserDTO getMe(){
-        return userAccountService.getMe();
+    public UserAccountDTO getMe(@RequestParam(value = "email", required = false) String email){
+        if(email == null){
+            return userAccountService.getMe();
+        } else {
+            return userAccountService.getUserByEmail(email);
+        }
+    }
+
+    @PostMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    public CredentialsUniqueDTO setMe(@RequestBody UserAccountDTO userAccountDTO){
+        CredentialsUniqueDTO credentialsUniqueDTO = authenticationService.isCredentialsUnique(userAccountDTO);
+        if(credentialsUniqueDTO.isCredentialsUnique()) {
+            UserAccount userAccount = userAccountService.updateUserAccount(userAccountDTO);
+        }
+        return credentialsUniqueDTO;
     }
 
 }

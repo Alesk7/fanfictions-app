@@ -6,9 +6,9 @@ import by.itr.fanfictionsapp.security.exceptions.VerificationTokenException;
 import by.itr.fanfictionsapp.services.AuthenticationService;
 import by.itr.fanfictionsapp.services.UserAccountService;
 import by.itr.fanfictionsapp.services.dto.CredentialsUniqueDTO;
-import by.itr.fanfictionsapp.services.dto.LoginRequestDTO;
 import by.itr.fanfictionsapp.services.dto.LoginResponseDTO;
 import by.itr.fanfictionsapp.services.dto.RegisterRequestDTO;
+import by.itr.fanfictionsapp.services.dto.UserAccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +24,8 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public LoginResponseDTO login(@RequestBody LoginRequestDTO loginRequestDTO){
-        return authenticationService.login(loginRequestDTO);
+    public LoginResponseDTO login(@RequestBody UserAccountDTO userAccountDTO){
+        return authenticationService.login(userAccountDTO);
     }
 
     @PostMapping("/register")

@@ -10,12 +10,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUserDTO {
+public class UserAccountDTO {
 
     String username;
     String email;
+    String password;
 
-    public AppUserDTO(UserAccount user){
+    public UserAccountDTO(UserAccount user){
         this.username = user.getUsername();
         this.email = user.getEmail();
     }
