@@ -30,6 +30,7 @@ public class FanfictionsAppApplication {
             user.setPassword(passwordEncoder.encode("1234qwer"));
             user.setUserRole(UserRole.ROLE_USER);
             user.setEnabled(true);
+            user.setNonBlocked(true);
             userAccountRepository.save(user);
         };
     }

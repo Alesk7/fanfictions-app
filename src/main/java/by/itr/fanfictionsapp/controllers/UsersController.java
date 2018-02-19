@@ -1,6 +1,5 @@
 package by.itr.fanfictionsapp.controllers;
 
-import by.itr.fanfictionsapp.models.UserAccount;
 import by.itr.fanfictionsapp.services.AuthenticationService;
 import by.itr.fanfictionsapp.services.UserAccountService;
 import by.itr.fanfictionsapp.services.dto.CredentialsUniqueDTO;
@@ -27,12 +26,13 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/me")
+    @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public CredentialsUniqueDTO setMe(@RequestBody UserAccountDTO userAccountDTO){
+    public CredentialsUniqueDTO updateUser(@RequestParam(value = "email", required = false) String email,
+                                           @RequestBody UserAccountDTO userAccountDTO){
         CredentialsUniqueDTO credentialsUniqueDTO = authenticationService.isCredentialsUnique(userAccountDTO);
         if(credentialsUniqueDTO.isCredentialsUnique()) {
-            UserAccount userAccount = userAccountService.updateUserAccount(userAccountDTO);
+            userAccountService.updateUserAccount(email, userAccountDTO);
         }
         return credentialsUniqueDTO;
     }

@@ -28,12 +28,23 @@ public class UserAccount {
 
     private boolean enabled;
 
+    private boolean nonBlocked;
+
     public UserAccount(RegisterRequestDTO registerRequestDTO){
         this.username = registerRequestDTO.getUsername();
         this.email = registerRequestDTO.getEmail();
         this.password = registerRequestDTO.getPassword();
         userRole = UserRole.ROLE_USER;
         enabled = false;
+        nonBlocked = true;
+    }
+
+    public void setUserRole(String role){
+        this.userRole = UserRole.valueOf(role);
+    }
+
+    public void setUserRole(UserRole role){
+        this.userRole = role;
     }
 
 }

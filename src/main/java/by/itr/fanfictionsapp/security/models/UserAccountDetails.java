@@ -20,6 +20,7 @@ public class UserAccountDetails implements UserDetails {
     private String password;
     private Set<GrantedAuthority> authorities;
     private boolean enabled;
+    private boolean accountNonLocked;
 
     public UserAccountDetails(UserAccount user){
         this.id = user.getId();
@@ -28,6 +29,7 @@ public class UserAccountDetails implements UserDetails {
         this.authorities = new HashSet<>();
         this.authorities.add(new SimpleGrantedAuthority(user.getUserRole().name()));
         this.enabled = user.isEnabled();
+        this.accountNonLocked = user.isNonBlocked();
     }
 
     @Override
@@ -52,7 +54,7 @@ public class UserAccountDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @Override
@@ -64,4 +66,5 @@ public class UserAccountDetails implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
 }

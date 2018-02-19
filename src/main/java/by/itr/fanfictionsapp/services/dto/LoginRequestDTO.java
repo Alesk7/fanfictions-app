@@ -1,6 +1,7 @@
 package by.itr.fanfictionsapp.services.dto;
 
 import by.itr.fanfictionsapp.models.UserAccount;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,17 +9,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserAccountDTO {
+@AllArgsConstructor
+public class LoginRequestDTO extends UserAccountDTO {
+
     private String username;
     private String email;
-    private String role;
-    private boolean blocked;
+    private String password;
 
-    public UserAccountDTO(UserAccount user){
+    public LoginRequestDTO(UserAccount user){
         this.username = user.getUsername();
         this.email = user.getEmail();
-        this.role = user.getUserRole().name();
-        this.blocked = !user.isNonBlocked();
     }
-
 }

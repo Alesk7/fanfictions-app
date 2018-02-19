@@ -9,8 +9,4 @@ public class CredentialsUniqueDTO {
     private boolean emailUnique;
     private boolean usernameUnique;
     private boolean credentialsUnique;
-
-    public CredentialsUniqueDTO(){
-
-    }
 }

@@ -5,12 +5,15 @@ import by.itr.fanfictionsapp.models.UserRole;
 import by.itr.fanfictionsapp.repositories.UserAccountRepository;
 import by.itr.fanfictionsapp.security.exceptions.CredentialsNotUniqueException;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
-import by.itr.fanfictionsapp.services.dto.UserAccountDTO;
+import by.itr.fanfictionsapp.services.dto.LoginRequestDTO;
 import by.itr.fanfictionsapp.services.dto.RegisterRequestDTO;
+import by.itr.fanfictionsapp.services.dto.UserAccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class UserAccountService {
 
     public UserAccountDTO getUserByEmail(String email){
         UserAccount user = userAccountRepository.findByEmail(email);
-        return new UserAccountDTO(user);
+        return new LoginRequestDTO(user);
     }
 
     public UserAccount createUserAccount(RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException {
@@ -43,11 +46,18 @@ public class UserAccountService {
         return userAccount;
     }
 
-    public UserAccount updateUserAccount(UserAccountDTO userAccountDTO){
-        UserAccountDetails userDetails = (UserAccountDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserAccount user = userAccountRepository.findOne(userDetails.getId());
-        if(!userAccountDTO.getUsername().isEmpty())
-            user.setUsername(userAccountDTO.getUsername());
+    public UserAccount updateUserAccount(String email, UserAccountDTO userAccountDTO){
+        UserAccount user;
+        if(email != null){
+            user = userAccountRepository.findByEmail(email);
+        } else {
+            UserAccountDetails userDetails = (UserAccountDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user = userAccountRepository.findOne(userDetails.getId());
+        }
+        Optional.ofNullable(userAccountDTO.getUsername()).ifPresent(user::setUsername);
+        Optional.ofNullable(userAccountDTO.getEmail()).ifPresent(user::setEmail);
+        Optional.ofNullable(userAccountDTO.getRole()).ifPresent(user::setUserRole);
+        user.setNonBlocked(!userAccountDTO.isBlocked());
         return userAccountRepository.save(user);
     }
 

@@ -9,6 +9,7 @@ import by.itr.fanfictionsapp.security.exceptions.VerificationTokenException;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
 import by.itr.fanfictionsapp.services.dto.LoginResponseDTO;
 import by.itr.fanfictionsapp.services.dto.CredentialsUniqueDTO;
+import by.itr.fanfictionsapp.services.dto.LoginRequestDTO;
 import by.itr.fanfictionsapp.services.dto.UserAccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ public class AuthenticationService {
     private final JavaMailSender mailSender;
     private final VerificationTokenRepository verificationTokenRepository;
 
-    public LoginResponseDTO login(UserAccountDTO loginRequestDTO){
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO){
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                 loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
         Authentication authResult = authenticationManager.authenticate(authRequest);

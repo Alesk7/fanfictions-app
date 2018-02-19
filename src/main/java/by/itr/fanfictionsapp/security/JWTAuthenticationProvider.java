@@ -7,9 +7,12 @@ import by.itr.fanfictionsapp.security.models.UserAccountDetails;
 import by.itr.fanfictionsapp.security.models.JWTAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,12 +25,14 @@ public class JWTAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authRequest) throws AuthenticationException {
         String token = (String) authRequest.getCredentials();
         Long userId = (Long) jwtHelper.decodeToken(token).get(JWTHelper.USER_ID_CLAIM);
-        if(userId == null)
-            throw new InvalidTokenAuthenticationException("Token does not contain a user id.");
         UserAccount user = userAccountRepository.findOne(userId);
-        if(user == null)
+        if(user == null) {
             throw new InvalidTokenAuthenticationException("Token does not contain existed user id.");
+        }
         UserAccountDetails userDetails = new UserAccountDetails(user);
+        if(!userDetails.isAccountNonLocked()) {
+            throw new LockedException("User account is locked");
+        }
         return new JWTAuthentication(userDetails);
     }
 
