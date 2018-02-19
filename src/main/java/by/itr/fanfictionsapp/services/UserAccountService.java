@@ -13,7 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +50,7 @@ public class UserAccountService {
         return userAccount;
     }
 
+    @Transactional
     public UserAccount updateUserAccount(String email, UserAccountDTO userAccountDTO){
         UserAccount user;
         if(email != null){
@@ -59,6 +64,13 @@ public class UserAccountService {
         Optional.ofNullable(userAccountDTO.getRole()).ifPresent(user::setUserRole);
         user.setNonBlocked(!userAccountDTO.isBlocked());
         return userAccountRepository.save(user);
+    }
+
+    public List<UserAccountDTO> getAllUsers(){
+        Iterable<UserAccount> users = userAccountRepository.findAll();
+        return StreamSupport.stream(users.spliterator(), false)
+                .map(UserAccountDTO::new)
+                .collect(Collectors.toList());
     }
 
 }
