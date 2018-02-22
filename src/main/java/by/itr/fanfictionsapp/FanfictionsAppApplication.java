@@ -78,36 +78,17 @@ public class FanfictionsAppApplication {
             tag3.setWeight(4);
             tagsRepository.save(tag3);
 
-            Fanfiction fanfiction = new Fanfiction();
-            fanfiction.setTitle("The Girl From The Maze");
-            fanfiction.setDescription("Imagine if someone had made it to the Glade before Alby. Someone who watched the boys amalgamate in order to survive, hidden by the shadows of fear and the walls that stretched to infinity.");
-            fanfiction.setGenre(Genre.Adventure);
-            fanfiction.setTags(Arrays.asList(tag, tag1, tag2, tag3));
-            fanfiction.setCreationDate(new Date());
-            fanfiction.setUserAccount(user);
-            fanfiction.setImageURL("https://i.quotev.com/img/q/u/18/1/19/2vzexvp6jo.jpg");
-            fanfictionsRepository.save(fanfiction);
-
-            Fanfiction fanfiction1 = new Fanfiction();
-            fanfiction1.setTitle("The Reborn Cullen (Jacob Black)");
-            fanfiction1.setDescription("Imagine if someone had made it to the Glade before Alby. Someone who watched the boys amalgamate in order to survive, hidden by the shadows of fear and the walls that stretched to infinity.");
-            fanfiction1.setGenre(Genre.Horror);
-            fanfiction1.setTags(Arrays.asList(tag, tag3));
-            fanfiction1.setCreationDate(new Date());
-            fanfiction1.setUserAccount(user);
-            fanfiction1.setImageURL("https://i.quotev.com/img/q/u/18/1/19/2vzexvp6jo.jpg");
-            fanfictionsRepository.save(fanfiction1);
-
-            Fanfiction fanfiction2 = new Fanfiction();
-            fanfiction2.setTitle("Reborn");
-            fanfiction2.setDescription("Imagine if someone had made it to the Glade before Alby. Someone who watched the boys amalgamate in order to survive, hidden by the shadows of fear and the walls that stretched to infinity.");
-            fanfiction2.setGenre(Genre.Adventure);
-            fanfiction2.setTags(Arrays.asList(tag, tag2, tag3));
-            fanfiction2.setCreationDate(new Date());
-            fanfiction2.setUserAccount(user);
-            fanfiction2.setImageURL("https://i.quotev.com/img/q/u/18/1/19/2vzexvp6jo.jpg");
-            fanfictionsRepository.save(fanfiction2);
-
+            for(int i = 1; i <= 150; i++){
+                Fanfiction fanfiction = new Fanfiction();
+                fanfiction.setTitle("The fanfic " + i);
+                fanfiction.setDescription("Imagine if someone had made it to the Glade before Alby. Someone who watched the boys amalgamate in order to survive, hidden by the shadows of fear and the walls that stretched to infinity.");
+                fanfiction.setGenre(Genre.Adventure);
+                fanfiction.setTags(Arrays.asList(tag, tag1, tag2, tag3));
+                fanfiction.setCreationDate(new Date());
+                fanfiction.setUserAccount(user);
+                fanfiction.setImageURL("https://i.quotev.com/img/q/u/18/1/19/2vzexvp6jo.jpg");
+                fanfictionsRepository.save(fanfiction);
+            }
 
         };
     }

@@ -1,16 +1,19 @@
 package by.itr.fanfictionsapp.repositories;
 
 import by.itr.fanfictionsapp.models.Fanfiction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface FanfictionsRepository extends CrudRepository<Fanfiction, Long> {
+public interface FanfictionsRepository extends PagingAndSortingRepository<Fanfiction, Long> {
 
-    @Query("from Fanfiction f inner join fetch f.userAccount where f.userAccount.id = :id")
-    Iterable<Fanfiction> findByUserAccountId(@Param("id") Long id);
+    @Query(value = "select f from Fanfiction f inner join f.userAccount u where u.id = ?1",
+           countQuery = "select count(f) from Fanfiction f inner join f.userAccount u where u.id = ?1")
+    Page<Fanfiction> findByUserAccountId(Long id, Pageable pageable);
 
-    @Query("from Fanfiction f inner join fetch f.userAccount where f.userAccount.email = :email")
-    Iterable<Fanfiction> findByUserAccountEmail(@Param("email") String email);
+    @Query(value = "select f from Fanfiction f inner join f.userAccount u where u.email = ?1",
+           countQuery = "select count(f) from Fanfiction f inner join f.userAccount u where u.email = ?1")
+    Page<Fanfiction> findByUserAccountEmail(String email, Pageable pageable);
 
 }

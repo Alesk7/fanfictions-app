@@ -5,6 +5,8 @@ import by.itr.fanfictionsapp.repositories.FanfictionsRepository;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +20,21 @@ public class FanfictionsService {
 
     private final FanfictionsRepository fanfictionsRepository;
 
-    public List<FanfictionDTO> getUserFanfictions(String email){
+    public List<FanfictionDTO> getUserFanfictions(String email, int page){
         Iterable<Fanfiction> fanfictions;
         if(email == null){
             Long id = ((UserAccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-            fanfictions = fanfictionsRepository.findByUserAccountId(id);
+            fanfictions = fanfictionsRepository.findByUserAccountId(id, new PageRequest(page, 10));
         } else {
-            fanfictions = fanfictionsRepository.findByUserAccountEmail(email);
+            fanfictions = fanfictionsRepository.findByUserAccountEmail(email, new PageRequest(page, 10));
         }
         return StreamSupport.stream(fanfictions.spliterator(), false)
                 .map(FanfictionDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public Long getEntitiesCount(){
+        return fanfictionsRepository.count();
     }
 
 }
