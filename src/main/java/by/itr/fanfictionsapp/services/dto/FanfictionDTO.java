@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class FanfictionDTO {
 
+    private Long id;
     private String title;
     private String description;
     private String genre;
@@ -23,6 +24,7 @@ public class FanfictionDTO {
     private String imageURL;
 
     public FanfictionDTO(Fanfiction fanfiction){
+        id = fanfiction.getId();
         title = fanfiction.getTitle();
         description = fanfiction.getDescription();
         genre = fanfiction.getGenre().name();

@@ -9,6 +9,7 @@ import by.itr.fanfictionsapp.services.social.SimpleSignInAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -69,7 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) {
         web.ignoring()
                 .antMatchers("/register/**", "/login/**")
-                .antMatchers("/signin/**", "/signup/**");
+                .antMatchers("/signin/**", "/signup/**")
+                .antMatchers(HttpMethod.GET, "/fanfictions/**", "/chapters/**");
     }
 
     @Override

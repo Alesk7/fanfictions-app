@@ -5,7 +5,6 @@ import by.itr.fanfictionsapp.repositories.FanfictionsRepository;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,13 @@ public class FanfictionsService {
 
     public Long getEntitiesCount(){
         return fanfictionsRepository.count();
+    }
+
+    public List<FanfictionDTO> getFreshFanfictions(int page){
+        Iterable<Fanfiction> fanfictions = fanfictionsRepository.findFresh(new PageRequest(page, 10));
+        return StreamSupport.stream(fanfictions.spliterator(), false)
+                .map(FanfictionDTO::new)
+                .collect(Collectors.toList());
     }
 
 }

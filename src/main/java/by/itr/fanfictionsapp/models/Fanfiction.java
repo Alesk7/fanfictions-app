@@ -33,4 +33,7 @@ public class Fanfiction {
 
     private Date creationDate;
 
+    @OneToMany(targetEntity = Chapter.class, fetch = FetchType.LAZY)
+    private List<Chapter> chapters;
+
 }

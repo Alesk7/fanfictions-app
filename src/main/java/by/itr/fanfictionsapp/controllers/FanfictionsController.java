@@ -27,4 +27,10 @@ public class FanfictionsController {
         return fanfictionsService.getUserFanfictions(null, page);
     }
 
+    @GetMapping("/fresh")
+    @ResponseStatus(HttpStatus.OK)
+    public List<FanfictionDTO> getFreshFanfictions(@RequestParam("page") int page){
+        return fanfictionsService.getFreshFanfictions(page);
+    }
+
 }

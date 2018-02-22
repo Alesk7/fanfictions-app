@@ -16,4 +16,8 @@ public interface FanfictionsRepository extends PagingAndSortingRepository<Fanfic
            countQuery = "select count(f) from Fanfiction f inner join f.userAccount u where u.email = ?1")
     Page<Fanfiction> findByUserAccountEmail(String email, Pageable pageable);
 
+    @Query(value = "select f from Fanfiction f order by f.creationDate",
+            countQuery = "select count(f) from Fanfiction f order by f.creationDate")
+    Page<Fanfiction> findFresh(Pageable pageable);
+
 }
