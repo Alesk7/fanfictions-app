@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 public class UserAccount {
 
     @Id
@@ -29,6 +28,10 @@ public class UserAccount {
     private boolean enabled;
 
     private boolean nonBlocked;
+
+    public UserAccount(){
+        this.nonBlocked = true;
+    }
 
     public UserAccount(RegisterRequestDTO registerRequestDTO){
         this.username = registerRequestDTO.getUsername();

@@ -51,19 +51,22 @@ public class UserAccountService {
     }
 
     @Transactional
-    public UserAccount updateUserAccount(String email, UserAccountDTO userAccountDTO){
-        UserAccount user;
-        if(email != null){
-            user = userAccountRepository.findByEmail(email);
-        } else {
-            UserAccountDetails userDetails = (UserAccountDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            user = userAccountRepository.findOne(userDetails.getId());
+    public void updateUserAccounts(UserAccountDTO... users){
+        for(UserAccountDTO u: users){
+            UserAccount user = userAccountRepository.findByEmail(u.getEmail());
+            Optional.ofNullable(u.getUsername()).ifPresent(user::setUsername);
+            Optional.ofNullable(u.getRole()).ifPresent(user::setUserRole);
+            user.setNonBlocked(!u.isBlocked());
+            userAccountRepository.save(user);
         }
-        Optional.ofNullable(userAccountDTO.getUsername()).ifPresent(user::setUsername);
-        Optional.ofNullable(userAccountDTO.getEmail()).ifPresent(user::setEmail);
-        Optional.ofNullable(userAccountDTO.getRole()).ifPresent(user::setUserRole);
-        user.setNonBlocked(!userAccountDTO.isBlocked());
-        return userAccountRepository.save(user);
+    }
+
+    @Transactional
+    public UserAccount updateMyUserAccount(UserAccountDTO userAccountDTO){
+        UserAccountDetails userDetails = (UserAccountDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserAccount userAccount = userAccountRepository.findOne(userDetails.getId());
+        Optional.ofNullable(userAccountDTO.getUsername()).ifPresent(userAccount::setUsername);
+        return userAccountRepository.save(userAccount);
     }
 
     public List<UserAccountDTO> getAllUsers(){
@@ -71,6 +74,14 @@ public class UserAccountService {
         return StreamSupport.stream(users.spliterator(), false)
                 .map(UserAccountDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteUserAccounts(UserAccountDTO... users){
+        for(UserAccountDTO u: users){
+            UserAccount user = userAccountRepository.findByEmail(u.getEmail());
+            userAccountRepository.delete(user);
+        }
     }
 
 }

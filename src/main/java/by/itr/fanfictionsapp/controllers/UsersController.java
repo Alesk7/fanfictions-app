@@ -29,22 +29,26 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/update")
+    @PostMapping("/me/update")
     @ResponseStatus(HttpStatus.OK)
-    public CredentialsUniqueDTO updateUser(@RequestBody UserAccountDTO userAccountDTO){
+    public CredentialsUniqueDTO updateUserAccount(@RequestBody UserAccountDTO userAccountDTO){
         CredentialsUniqueDTO credentialsUniqueDTO = authenticationService.isCredentialsUnique(userAccountDTO);
-        if(credentialsUniqueDTO.isCredentialsUnique()) {
-            userAccountService.updateUserAccount(null, userAccountDTO);
+        if(credentialsUniqueDTO.isUsernameUnique()) {
+            userAccountService.updateMyUserAccount(userAccountDTO);
         }
         return credentialsUniqueDTO;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/updateByEmail")
+    @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public void updateUserByEMail(@RequestParam("email") String email,
-                                  @RequestBody UserAccountDTO userAccountDTO){
-        userAccountService.updateUserAccount(email, userAccountDTO);
+    public void updateUserAccounts(@RequestBody UserAccountDTO[] users){
+        userAccountService.updateUserAccounts(users);
+    }
+
+    @PostMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUserAccounts(@RequestBody UserAccountDTO[] users){
+        userAccountService.deleteUserAccounts(users);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
