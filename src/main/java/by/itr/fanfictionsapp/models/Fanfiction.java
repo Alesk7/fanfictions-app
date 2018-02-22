@@ -1,6 +1,8 @@
 package by.itr.fanfictionsapp.models;
 
+import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Fanfiction {
 
     @Id
@@ -35,5 +38,14 @@ public class Fanfiction {
 
     @OneToMany(targetEntity = Chapter.class, fetch = FetchType.LAZY)
     private List<Chapter> chapters;
+
+    public Fanfiction(FanfictionDTO fanfictionDTO, UserAccount userAccount){
+        this.userAccount = userAccount;
+        this.title = fanfictionDTO.getTitle();
+        this.description = fanfictionDTO.getDescription();
+        this.imageURL = fanfictionDTO.getImageURL();
+        this.genre = Genre.valueOf(fanfictionDTO.getGenre());
+        this.creationDate = new Date();
+    }
 
 }

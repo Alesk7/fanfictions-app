@@ -23,14 +23,22 @@ public class FanfictionsController {
 
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
-    public List<FanfictionDTO> getMyFanfictions(@RequestParam("page") int page) {
-        return fanfictionsService.getUserFanfictions(null, page);
+    public List<FanfictionDTO> getMyFanfictions(@RequestParam(value = "email", required = false) String email,
+                                                @RequestParam("page") int page) {
+        return fanfictionsService.getUserFanfictions(email, page);
     }
 
     @GetMapping("/fresh")
     @ResponseStatus(HttpStatus.OK)
     public List<FanfictionDTO> getFreshFanfictions(@RequestParam("page") int page){
         return fanfictionsService.getFreshFanfictions(page);
+    }
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.OK)
+    public void createFanfiction(@RequestParam(value = "email", required = false) String email,
+                                 @RequestBody FanfictionDTO fanfictionDTO){
+        fanfictionsService.createFanfiction(email, fanfictionDTO);
     }
 
 }

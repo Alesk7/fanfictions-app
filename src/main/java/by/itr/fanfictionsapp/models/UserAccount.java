@@ -2,7 +2,6 @@ package by.itr.fanfictionsapp.models;
 
 import by.itr.fanfictionsapp.services.dto.RegisterRequestDTO;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
