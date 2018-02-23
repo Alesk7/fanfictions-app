@@ -9,12 +9,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserAccountDTO {
+
+    private Long id;
     private String username;
     private String email;
     private String role;
     private boolean blocked;
 
     public UserAccountDTO(UserAccount user){
+        this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.role = user.getUserRole().name();

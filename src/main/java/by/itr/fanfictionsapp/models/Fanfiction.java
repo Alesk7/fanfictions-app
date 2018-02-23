@@ -1,5 +1,6 @@
 package by.itr.fanfictionsapp.models;
 
+import by.itr.fanfictionsapp.services.dto.ChapterDTO;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Entity
 @Getter
@@ -46,6 +49,16 @@ public class Fanfiction {
         this.imageURL = fanfictionDTO.getImageURL();
         this.genre = Genre.valueOf(fanfictionDTO.getGenre());
         this.creationDate = new Date();
+    }
+
+    public void setChapters(Iterable<ChapterDTO> chapters){
+        this.chapters = StreamSupport.stream(chapters.spliterator(), false)
+                .map(Chapter::new)
+                .collect(Collectors.toList());
+    }
+
+    public void setChapters(List<Chapter> chapters){
+        this.chapters = chapters;
     }
 
 }

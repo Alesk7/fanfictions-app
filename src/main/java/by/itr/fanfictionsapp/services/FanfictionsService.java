@@ -1,5 +1,6 @@
 package by.itr.fanfictionsapp.services;
 
+import by.itr.fanfictionsapp.models.Chapter;
 import by.itr.fanfictionsapp.models.Fanfiction;
 import by.itr.fanfictionsapp.models.Tag;
 import by.itr.fanfictionsapp.models.UserAccount;
@@ -8,6 +9,7 @@ import by.itr.fanfictionsapp.repositories.TagsRepository;
 import by.itr.fanfictionsapp.repositories.UserAccountRepository;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
+import by.itr.fanfictionsapp.services.dto.FanfictionResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,39 +18,42 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
 public class FanfictionsService {
 
     private final FanfictionsRepository fanfictionsRepository;
+    private final ChaptersService chaptersService;
     private final UserAccountRepository userAccountRepository;
     private final TagsRepository tagsRepository;
 
-    public List<FanfictionDTO> getUserFanfictions(String email, int page){
-        Iterable<Fanfiction> fanfictions;
+    public FanfictionResponseDTO getUserFanfictions(String email, int page){
         if(email == null){
             Long id = ((UserAccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-            fanfictions = fanfictionsRepository.findByUserAccountId(id, new PageRequest(page, 10));
+            return new FanfictionResponseDTO(fanfictionsRepository.findByUserAccountId(id, new PageRequest(page, 10)));
         } else {
-            fanfictions = fanfictionsRepository.findByUserAccountEmail(email, new PageRequest(page, 10));
+            return new FanfictionResponseDTO(fanfictionsRepository.findByUserAccountEmail(email, new PageRequest(page, 10)));
         }
-        return StreamSupport.stream(fanfictions.spliterator(), false)
-                .map(FanfictionDTO::new)
-                .collect(Collectors.toList());
     }
 
-    public Long getEntitiesCount(){
-        return fanfictionsRepository.count();
+    public FanfictionResponseDTO getFreshFanfictions(int page){
+        return new FanfictionResponseDTO(fanfictionsRepository.findFresh(new PageRequest(page, 10)));
     }
 
-    public List<FanfictionDTO> getFreshFanfictions(int page){
-        Iterable<Fanfiction> fanfictions = fanfictionsRepository.findFresh(new PageRequest(page, 10));
-        return StreamSupport.stream(fanfictions.spliterator(), false)
-                .map(FanfictionDTO::new)
-                .collect(Collectors.toList());
+    public FanfictionDTO getFanfiction(Long fanfictionId, Long userId){
+        FanfictionDTO fanfictionDTO = null;
+        Fanfiction fanfiction = fanfictionsRepository.findOne(fanfictionId);
+        try{
+            if(fanfiction.getUserAccount().getId().equals(userId)) {
+                fanfictionDTO = new FanfictionDTO(fanfiction);
+                fanfictionDTO.setChapters(fanfiction.getChapters());
+            }
+        } catch (NullPointerException npe){
+            fanfictionDTO = new FanfictionDTO(fanfiction);
+            fanfictionDTO.setChapters(fanfiction.getChapters());
+        }
+        return fanfictionDTO;
     }
 
     @Transactional
@@ -62,6 +67,9 @@ public class FanfictionsService {
         }
         Fanfiction fanfiction = new Fanfiction(fanfictionDTO, userAccount);
         fanfiction.setTags(getTags(fanfictionDTO.getTags()));
+        fanfictionsRepository.save(fanfiction);
+        List<Chapter> chapters = chaptersService.createChapters(fanfictionDTO.getChapters());
+        fanfiction.setChapters(chapters);
         fanfictionsRepository.save(fanfiction);
     }
 

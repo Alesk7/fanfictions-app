@@ -71,7 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/register/**", "/login/**")
                 .antMatchers("/signin/**", "/signup/**")
-                .antMatchers(HttpMethod.GET, "/fanfictions/**", "/chapters/**");
+                .antMatchers(HttpMethod.GET, "/fanfictions/fresh", "/fanfictions/hot")
+                .antMatchers(HttpMethod.GET, "/chapters/**");
     }
 
     @Override

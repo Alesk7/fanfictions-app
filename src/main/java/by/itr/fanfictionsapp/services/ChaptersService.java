@@ -1,7 +1,6 @@
 package by.itr.fanfictionsapp.services;
 
 import by.itr.fanfictionsapp.models.Chapter;
-import by.itr.fanfictionsapp.models.Fanfiction;
 import by.itr.fanfictionsapp.repositories.ChaptersRepository;
 import by.itr.fanfictionsapp.repositories.FanfictionsRepository;
 import by.itr.fanfictionsapp.services.dto.ChapterDTO;
@@ -25,16 +24,14 @@ public class ChaptersService {
     }
 
     @Transactional
-    public void createChapters(List<ChapterDTO> chapters, Long fanfictionId){
+    public List<Chapter> createChapters(List<ChapterDTO> chapters){
         List<Chapter> chapterList = new ArrayList<>();
         for(ChapterDTO c: chapters){
             Chapter chapter = new Chapter(c);
             chapterList.add(chapter);
             chaptersRepository.save(chapter);
         }
-        Fanfiction fanfiction = fanfictionsRepository.findOne(fanfictionId);
-        fanfiction.setChapters(chapterList);
-        fanfictionsRepository.save(fanfiction);
+        return chapterList;
     }
 
 }
