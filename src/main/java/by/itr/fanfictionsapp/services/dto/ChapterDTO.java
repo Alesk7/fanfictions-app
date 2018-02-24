@@ -10,11 +10,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChapterDTO {
 
+    private Long id;
     private String title;
     private String textBlock;
     private String imageURL;
 
     public ChapterDTO(Chapter chapter){
+        id = chapter.getId();
         title = chapter.getTitle();
         textBlock = chapter.getTextBlock();
         imageURL = chapter.getImageURL();

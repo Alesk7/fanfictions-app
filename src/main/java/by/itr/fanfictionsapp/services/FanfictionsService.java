@@ -6,7 +6,6 @@ import by.itr.fanfictionsapp.models.Tag;
 import by.itr.fanfictionsapp.models.UserAccount;
 import by.itr.fanfictionsapp.repositories.FanfictionsRepository;
 import by.itr.fanfictionsapp.repositories.TagsRepository;
-import by.itr.fanfictionsapp.repositories.UserAccountRepository;
 import by.itr.fanfictionsapp.security.models.UserAccountDetails;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
 import by.itr.fanfictionsapp.services.dto.FanfictionResponseDTO;
@@ -25,7 +24,7 @@ public class FanfictionsService {
 
     private final FanfictionsRepository fanfictionsRepository;
     private final ChaptersService chaptersService;
-    private final UserAccountRepository userAccountRepository;
+    private final UserAccountService userAccountService;
     private final TagsRepository tagsRepository;
 
     public FanfictionResponseDTO getUserFanfictions(String email, int page){
@@ -56,18 +55,26 @@ public class FanfictionsService {
         return fanfictionDTO;
     }
 
+    public void deleteFanfiction(Long id){
+        fanfictionsRepository.delete(id);
+    }
+
     @Transactional
     public void createFanfiction(String email, FanfictionDTO fanfictionDTO){
-        UserAccount userAccount;
-        if(email == null){
-            Long id = ((UserAccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-            userAccount = userAccountRepository.findOne(id);
-        } else {
-            userAccount = userAccountRepository.findByEmail(email);
-        }
+        UserAccount userAccount = userAccountService.findUser(email);
         Fanfiction fanfiction = new Fanfiction(fanfictionDTO, userAccount);
         fanfiction.setTags(getTags(fanfictionDTO.getTags()));
         fanfictionsRepository.save(fanfiction);
+        List<Chapter> chapters = chaptersService.createChapters(fanfictionDTO.getChapters());
+        fanfiction.setChapters(chapters);
+        fanfictionsRepository.save(fanfiction);
+    }
+
+    @Transactional
+    public void updateFanfiction(FanfictionDTO fanfictionDTO){
+        Fanfiction fanfiction = fanfictionsRepository.findOne(fanfictionDTO.getId());
+        fanfiction.set(fanfictionDTO);
+        fanfiction.setTags(getTags(fanfictionDTO.getTags()));
         List<Chapter> chapters = chaptersService.createChapters(fanfictionDTO.getChapters());
         fanfiction.setChapters(chapters);
         fanfictionsRepository.save(fanfiction);

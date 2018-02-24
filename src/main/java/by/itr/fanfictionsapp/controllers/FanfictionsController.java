@@ -1,6 +1,5 @@
 package by.itr.fanfictionsapp.controllers;
 
-import by.itr.fanfictionsapp.models.Genre;
 import by.itr.fanfictionsapp.services.FanfictionsService;
 import by.itr.fanfictionsapp.services.TagsService;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
@@ -40,6 +39,12 @@ public class FanfictionsController {
         fanfictionsService.createFanfiction(email, fanfictionDTO);
     }
 
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateFanfiction(@RequestBody FanfictionDTO fanfictionDTO){
+        fanfictionsService.updateFanfiction(fanfictionDTO);
+    }
+
     @GetMapping("/get/{fanfictionId}")
     @ResponseStatus(HttpStatus.OK)
     public FanfictionDTO getFanfiction(@PathVariable Long fanfictionId,
@@ -47,10 +52,10 @@ public class FanfictionsController {
         return fanfictionsService.getFanfiction(fanfictionId, userId);
     }
 
-    @GetMapping("/genres")
+    @PostMapping("/delete/{fanfictionId}")
     @ResponseStatus(HttpStatus.OK)
-    public Genre[] getGenres(){
-        return Genre.values();
+    public void deleteFanfiction (@PathVariable Long fanfictionId){
+        fanfictionsService.deleteFanfiction(fanfictionId);
     }
 
     @GetMapping("/tags")

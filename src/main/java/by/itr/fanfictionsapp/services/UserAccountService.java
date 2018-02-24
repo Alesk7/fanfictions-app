@@ -84,4 +84,15 @@ public class UserAccountService {
         }
     }
 
+    UserAccount findUser(String email){
+        UserAccount userAccount;
+        if(email == null){
+            Long id = ((UserAccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            userAccount = userAccountRepository.findOne(id);
+        } else {
+            userAccount = userAccountRepository.findByEmail(email);
+        }
+        return userAccount;
+    }
+
 }

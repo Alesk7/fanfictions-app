@@ -44,11 +44,7 @@ public class Fanfiction {
 
     public Fanfiction(FanfictionDTO fanfictionDTO, UserAccount userAccount){
         this.userAccount = userAccount;
-        this.title = fanfictionDTO.getTitle();
-        this.description = fanfictionDTO.getDescription();
-        this.imageURL = fanfictionDTO.getImageURL();
-        this.genre = Genre.valueOf(fanfictionDTO.getGenre());
-        this.creationDate = new Date();
+        set(fanfictionDTO);
     }
 
     public void setChapters(Iterable<ChapterDTO> chapters){
@@ -59,6 +55,14 @@ public class Fanfiction {
 
     public void setChapters(List<Chapter> chapters){
         this.chapters = chapters;
+    }
+
+    public void set(FanfictionDTO fanfictionDTO){
+        this.title = fanfictionDTO.getTitle();
+        this.description = fanfictionDTO.getDescription();
+        this.imageURL = fanfictionDTO.getImageURL();
+        this.genre = Genre.valueOf(fanfictionDTO.getGenre());
+        this.creationDate = new Date();
     }
 
 }
