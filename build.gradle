@@ -36,7 +36,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-social-twitter')
     compile('org.springframework.social:spring-social-vkontakte:2.0.0.BUILD-SNAPSHOT')
     compile('ru.shadam.spring-boot:social-vkontakte-spring-boot-starter:0.1')
-    compile('org.projectlombok:lombok:1.16.20')
+	compile group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.17.0'
+	compile('org.projectlombok:lombok:1.16.20')
 	compile('com.auth0:java-jwt:3.3.0')
 	runtime('mysql:mysql-connector-java')
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
