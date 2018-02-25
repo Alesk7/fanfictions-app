@@ -48,8 +48,8 @@ public class FanfictionsController {
     @GetMapping("/get/{fanfictionId}")
     @ResponseStatus(HttpStatus.OK)
     public FanfictionDTO getFanfiction(@PathVariable Long fanfictionId,
-                                       @RequestParam(value = "userId", required = false) Long userId){
-        return fanfictionsService.getFanfiction(fanfictionId, userId);
+                                       @RequestParam(value = "email", required = false) String userEmail){
+        return fanfictionsService.getFanfiction(fanfictionId, userEmail);
     }
 
     @PostMapping("/delete/{fanfictionId}")

@@ -40,15 +40,10 @@ public class FanfictionsService {
         return new FanfictionResponseDTO(fanfictionsRepository.findFresh(new PageRequest(page, 10)));
     }
 
-    public FanfictionDTO getFanfiction(Long fanfictionId, Long userId){
+    public FanfictionDTO getFanfiction(Long fanfictionId, String userEmail){
         FanfictionDTO fanfictionDTO = null;
         Fanfiction fanfiction = fanfictionsRepository.findOne(fanfictionId);
-        try{
-            if(fanfiction.getUserAccount().getId().equals(userId)) {
-                fanfictionDTO = new FanfictionDTO(fanfiction);
-                fanfictionDTO.setChapters(fanfiction.getChapters());
-            }
-        } catch (NullPointerException npe){
+        if(fanfiction.getUserAccount().getEmail().equals(userEmail) || userEmail == null) {
             fanfictionDTO = new FanfictionDTO(fanfiction);
             fanfictionDTO.setChapters(fanfiction.getChapters());
         }
@@ -89,6 +84,7 @@ public class FanfictionsService {
                 tagsRepository.save(newTag);
                 tags.add(newTag);
             } else {
+                tag.setWeight(tag.getWeight() + 1);
                 tags.add(tag);
             }
         }
