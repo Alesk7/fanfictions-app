@@ -46,6 +46,7 @@ public class FanfictionsService {
         if(fanfiction.getUserAccount().getEmail().equals(userEmail) || userEmail == null) {
             fanfictionDTO = new FanfictionDTO(fanfiction);
             fanfictionDTO.setChapters(fanfiction.getChapters());
+            fanfictionDTO.setComments(fanfiction.getComments());
         }
         return fanfictionDTO;
     }
@@ -68,7 +69,7 @@ public class FanfictionsService {
     @Transactional
     public void updateFanfiction(FanfictionDTO fanfictionDTO){
         Fanfiction fanfiction = fanfictionsRepository.findOne(fanfictionDTO.getId());
-        fanfiction.set(fanfictionDTO);
+        fanfiction.setDataFromDTO(fanfictionDTO);
         fanfiction.setTags(getTags(fanfictionDTO.getTags()));
         List<Chapter> chapters = chaptersService.createChapters(fanfictionDTO.getChapters());
         fanfiction.setChapters(chapters);

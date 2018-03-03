@@ -1,16 +1,14 @@
 package by.itr.fanfictionsapp.models;
 
-import by.itr.fanfictionsapp.services.dto.ChapterDTO;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Entity
 @Getter
@@ -27,6 +25,7 @@ public class Fanfiction {
 
     private String title;
 
+    @Size(max = 280)
     private String description;
 
     private String imageURL;
@@ -42,22 +41,22 @@ public class Fanfiction {
     @OneToMany(targetEntity = Chapter.class, fetch = FetchType.LAZY)
     private List<Chapter> chapters;
 
+    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY)
+    private List<Comment> comments;
+
+    @OneToMany(targetEntity = Rating.class, fetch = FetchType.LAZY)
+    private List<Rating> rates;
+
     public Fanfiction(FanfictionDTO fanfictionDTO, UserAccount userAccount){
         this.userAccount = userAccount;
-        set(fanfictionDTO);
-    }
-
-    public void setChapters(Iterable<ChapterDTO> chapters){
-        this.chapters = StreamSupport.stream(chapters.spliterator(), false)
-                .map(Chapter::new)
-                .collect(Collectors.toList());
+        setDataFromDTO(fanfictionDTO);
     }
 
     public void setChapters(List<Chapter> chapters){
         this.chapters = chapters;
     }
 
-    public void set(FanfictionDTO fanfictionDTO){
+    public void setDataFromDTO(FanfictionDTO fanfictionDTO){
         this.title = fanfictionDTO.getTitle();
         this.description = fanfictionDTO.getDescription();
         this.imageURL = fanfictionDTO.getImageURL();

@@ -27,19 +27,19 @@ public class UserAccountService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
 
-    public UserAccountDTO getMe(){
+    public UserAccountDTO getMe() {
         UserAccountDetails userDetails = (UserAccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserAccount user = userAccountRepository.findOne(userDetails.getId());
         return new UserAccountDTO(user);
     }
 
-    public UserAccountDTO getUserByEmail(String email){
+    public UserAccountDTO getUserByEmail(String email) {
         UserAccount user = userAccountRepository.findByEmail(email);
         return new LoginRequestDTO(user);
     }
 
     public UserAccount createUserAccount(RegisterRequestDTO registerRequestDTO) throws CredentialsNotUniqueException {
-        if(!authenticationService.isCredentialsUnique(registerRequestDTO).isCredentialsUnique())
+        if (!authenticationService.isCredentialsUnique(registerRequestDTO).isCredentialsUnique())
             throw new CredentialsNotUniqueException("Credentials not unique");
         UserAccount userAccount = new UserAccount();
         userAccount.setEmail(registerRequestDTO.getEmail());
@@ -51,8 +51,8 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void updateUserAccounts(UserAccountDTO... users){
-        for(UserAccountDTO u: users){
+    public void updateUserAccounts(UserAccountDTO... users) {
+        for (UserAccountDTO u : users) {
             UserAccount user = userAccountRepository.findByEmail(u.getEmail());
             Optional.ofNullable(u.getUsername()).ifPresent(user::setUsername);
             Optional.ofNullable(u.getRole()).ifPresent(user::setUserRole);
@@ -61,15 +61,7 @@ public class UserAccountService {
         }
     }
 
-    @Transactional
-    public UserAccount updateMyUserAccount(UserAccountDTO userAccountDTO){
-        UserAccountDetails userDetails = (UserAccountDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserAccount userAccount = userAccountRepository.findOne(userDetails.getId());
-        Optional.ofNullable(userAccountDTO.getUsername()).ifPresent(userAccount::setUsername);
-        return userAccountRepository.save(userAccount);
-    }
-
-    public List<UserAccountDTO> getAllUsers(){
+    public List<UserAccountDTO> getAllUsers() {
         Iterable<UserAccount> users = userAccountRepository.findAll();
         return StreamSupport.stream(users.spliterator(), false)
                 .map(UserAccountDTO::new)
@@ -77,22 +69,19 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void deleteUserAccounts(UserAccountDTO... users){
-        for(UserAccountDTO u: users){
+    public void deleteUserAccounts(UserAccountDTO... users) {
+        for (UserAccountDTO u : users) {
             UserAccount user = userAccountRepository.findByEmail(u.getEmail());
             userAccountRepository.delete(user);
         }
     }
 
-    UserAccount findUser(String email){
-        UserAccount userAccount;
-        if(email == null){
+    UserAccount findUser(String email) {
+        if (email == null) {
             Long id = ((UserAccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-            userAccount = userAccountRepository.findOne(id);
-        } else {
-            userAccount = userAccountRepository.findByEmail(email);
+            return userAccountRepository.findOne(id);
         }
-        return userAccount;
+        return userAccountRepository.findByEmail(email);
     }
 
 }

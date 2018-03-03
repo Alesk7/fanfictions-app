@@ -1,6 +1,7 @@
 package by.itr.fanfictionsapp.services.dto;
 
 import by.itr.fanfictionsapp.models.Chapter;
+import by.itr.fanfictionsapp.models.Comment;
 import by.itr.fanfictionsapp.models.Fanfiction;
 import by.itr.fanfictionsapp.models.Tag;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class FanfictionDTO {
     private List<String> tags;
     private String imageURL;
     private List<ChapterDTO> chapters;
+    private List<CommentDTO> comments;
 
     public FanfictionDTO(Fanfiction fanfiction){
         id = fanfiction.getId();
@@ -43,6 +45,12 @@ public class FanfictionDTO {
     public void setChapters(Iterable<Chapter> chapters){
         this.chapters = StreamSupport.stream(chapters.spliterator(), false)
                 .map(ChapterDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public void setComments(Iterable<Comment> comments){
+        this.comments = StreamSupport.stream(comments.spliterator(), false)
+                .map(CommentDTO::new)
                 .collect(Collectors.toList());
     }
 

@@ -1,5 +1,6 @@
 package by.itr.fanfictionsapp.controllers;
 
+import by.itr.fanfictionsapp.repositories.FanfictionsRepository;
 import by.itr.fanfictionsapp.services.FanfictionsService;
 import by.itr.fanfictionsapp.services.TagsService;
 import by.itr.fanfictionsapp.services.dto.FanfictionDTO;
@@ -18,6 +19,7 @@ public class FanfictionsController {
 
     private final FanfictionsService fanfictionsService;
     private final TagsService tagsService;
+    private final FanfictionsRepository fanfictionsRepository;
 
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)

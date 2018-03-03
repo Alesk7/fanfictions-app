@@ -18,7 +18,7 @@ public class UserAccountDao implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAccount user = userRepository.findByUsername(username);
-        if(user == null) throw new UsernameNotFoundException("User not found");
+        if (user == null) throw new UsernameNotFoundException("User not found");
         return new UserAccountDetails(user);
     }
 }

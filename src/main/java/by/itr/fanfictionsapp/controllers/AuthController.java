@@ -12,6 +12,7 @@ import by.itr.fanfictionsapp.services.dto.LoginRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -40,13 +41,14 @@ public class AuthController {
     }
 
     @GetMapping("/register/confirm")
-    @ResponseStatus(HttpStatus.OK)
-    public void confirmRegistration(@RequestParam("token") String token) throws VerificationTokenException{
+    public RedirectView confirmRegistration(@RequestParam("token") String token) throws VerificationTokenException{
         authenticationService.confirmUserAccount(token);
+        return new RedirectView("http://localhost:4200");
     }
 
     @PostMapping("/isCredentialsUnique")
     public CredentialsUniqueDTO isCredentialsUnique(@RequestBody RegisterRequestDTO registerRequestDTO){
         return authenticationService.isCredentialsUnique(registerRequestDTO);
     }
+
 }
